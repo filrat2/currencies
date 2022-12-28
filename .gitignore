@@ -1,0 +1,8 @@
+*.pyc
+*~
+__pycache__
+venv/
+db.sqlite3
+nbp.db
+flask_run.txt
+.DS_Store
