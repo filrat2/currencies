@@ -19,22 +19,34 @@ class DateValidationAction(argparse.Action):
         try:
             values = datetime.strptime(values, '%Y-%m-%d')
         except ValueError:
-            raise ValueError("zły format daty! RRRR-MM-DD (standard ISO 8601)")
+            raise ValueError("Niepoprawny format daty! Prawidłowy format daty "
+                             "to: RRRR-MM-DD (standard ISO 8601)")
 
         setattr(namespace, self.dest, values)
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('start_date', help='RRRR-MM-DD (standard ISO 8601)',
+parser.add_argument('start_date', help=('Podaj początek zakresu dat do '
+                                        'pobrania danych z Narodowego Banku '
+                                        'Polskiego. Datę podaj w formacie '
+                                        'RRRR-MM-DD (standard ISO 8601). Dane '
+                                        'archiwalne o kursach walut dostępne '
+                                        'są od 2 stycznia 2002 r.'),
                     action=DateValidationAction)
-parser.add_argument('end_date', help='RRRR-MM-DD (standard ISO 8601)',
+parser.add_argument('end_date', help=('Podaj koniec zakresu dat do '
+                                      'pobrania danych z Narodowego Banku '
+                                      'Polskiego. Datę podaj w formacie '
+                                      'RRRR-MM-DD (standard ISO 8601). Dane '
+                                      'archiwalne o kursach walut dostępne '
+                                      'są od 2 stycznia 2002 r.'),
                     action=DateValidationAction)
 args = parser.parse_args()
 
 time_delta = args.end_date - args.start_date
 
 if time_delta.days > 93:
-    raise ValueError("zbyt duży zakres dat")
+    raise ValueError("Zakres czasowy nie może obejmować przedziału dłuższego, "
+                     "niż 93 dni. Podaj inny, krótszy zakres czasowy.")
 
 
 start_date = datetime.strftime(args.start_date, '%Y-%m-%d')
