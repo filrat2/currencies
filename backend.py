@@ -49,17 +49,12 @@ def comparison():
         first_currency_midrate = first_currency.mid_rate
         second_currency_midrate = second_currency.mid_rate
 
-        print(first_currency_midrate, second_currency_midrate)
-
         if first_currency_midrate and second_currency_midrate:
             compare_result = first_currency_midrate - second_currency_midrate
 
         resp["first_currency"] = [c for c in currencies if c.id == first_currency_id][0].code
         resp["second_currency"] = [c for c in currencies if c.id == second_currency_id][0].code
         resp["compare_result"] = compare_result
-
-        print(resp)
-        print(compare_result)
 
     return render_template('comparison.html', resp=resp, currencies=currencies)
 
@@ -76,6 +71,7 @@ def trade():
         id_sell = int(request.form.get('sell'))
         id_buy = int(request.form.get('buy'))
         count = float(request.form.get('count', 0))
+        resp["count"] = float(count)
         if id_sell != 0:
             sell_c = CurrencyDayMidRate.query.filter_by(
                     currency_id=id_sell,
@@ -99,12 +95,9 @@ def trade():
             amount = (sell_value * count) / buy_value
             resp["amount"] = amount
 
-            print(sell_value, buy_value)
             resp["sell"] = [c for c in currencies if c.id == id_sell][0].code
             resp["buy"] = [c for c in currencies if c.id == id_buy][0].code
-            print("kwota", amount)
 
-        print(resp)
     return render_template('trade.html', resp=resp, currencies=currencies)
 
 
@@ -127,6 +120,10 @@ def plot():
     if request.method == "POST":
         currency_id = int(request.form.get('currency'))
 
+    currency = {}
+    currency['name'] = [c for c in currencies if c.id == currency_id][0].name
+    currency['code'] = [c for c in currencies if c.id == currency_id][0].code
+
     query = CurrencyDayMidRate.query.filter_by(
             currency_id=currency_id,
         ).order_by(CurrencyDayMidRate.date.asc()).all()
@@ -137,8 +134,13 @@ def plot():
         df['date'].append(currency_day_midrate.date)
         df['mid_rate'].append(currency_day_midrate.mid_rate)
 
-    fig = px.line(df, x='date', y='mid_rate')
+    fig = px.line(df, x='date', y='mid_rate',
+                  labels={
+                      "date": "Data",
+                      "mid_rate": "Kurs (PLN)"
+                      },
+                  )
     graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template('dash.html', graphJSON=graphJSON,
-                           currencies=currencies)
+    return render_template('plot.html', graphJSON=graphJSON,
+                           currencies=currencies, currency=currency)
