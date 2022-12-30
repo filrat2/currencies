@@ -45,16 +45,13 @@
         <input type="submit" value="Zatwierdź"><br><br>
     </form>
     
-    {% if resp %}
-
-        {% if resp['compare_result'] == 0.0 %}
-            <h3>Kursy tych walut są równe. Prawdopodobnie do porównania wybrałeś dwie takie same waluty.</h3>
-        {% elif resp['compare_result'] > 0.0 %}
-            <h3>Kurs waluty {{ resp["first_currency"] }} jest o {{ resp['compare_result']|round(2, "common") }} zł wyższy niż kurs  waluty {{ resp["second_currency"] }}.</h3>
-        {% else %}
-             <h3>Kurs waluty {{ resp["first_currency"] }} jest o {{ resp['compare_result']|abs|round(2, "common") }} zł niższy niż kurs waluty {{ resp["second_currency"] }}.</h3>
-        {% endif %}
-
+    {% if  not resp %}
+    {% elif resp['compare_result'] == 0.0 %}
+        <h3>Kursy tych walut są równe. Prawdopodobnie do porównania wybrałeś dwie takie same waluty.</h3>
+    {% elif resp['compare_result'] > 0.0 %}
+        <h3>Kurs waluty {{ resp["first_currency"] }} jest o {{ resp['compare_result']|round(2, "common") }} zł wyższy niż kurs  waluty {{ resp["second_currency"] }}.</h3>
+    {% else %}
+         <h3>Kurs waluty {{ resp["first_currency"] }} jest o {{ resp['compare_result']|abs|round(2, "common") }} zł niższy niż kurs waluty {{ resp["second_currency"] }}.</h3>
     {% endif %}
     
     <p>

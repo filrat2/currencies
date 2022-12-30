@@ -57,6 +57,8 @@
     </form>
     
     {% if not resp%}
+    {% elif resp["sell"] == resp["buy"] %}
+    <h3>Prawdopodobnie wybrałeś dwie takie same waluty.</h3>
     {% elif (resp|length) == 4 %}
     <h3>Jeśli sprzedasz {{ resp["count"] }} {{ resp["sell"] }}, otrzymasz {{ resp["amount"]|round(2) }} {{ resp["buy"] }}.</h3>
     {% elif (resp|length) <= 4 %}

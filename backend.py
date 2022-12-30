@@ -117,22 +117,29 @@ def plot():
 
     currency_id = 8
     currencies = Currency.query.all()
-    if request.method == "POST":
+
+    if request.method == "POST" and currencies:
         currency_id = int(request.form.get('currency'))
 
-    currency = {}
-    currency['name'] = [c for c in currencies if c.id == currency_id][0].name
-    currency['code'] = [c for c in currencies if c.id == currency_id][0].code
+    if currencies:
 
-    query = CurrencyDayMidRate.query.filter_by(
-            currency_id=currency_id,
-        ).order_by(CurrencyDayMidRate.date.asc()).all()
+        currency = {}
+        currency['name'] = [c for c in currencies if c.id == currency_id][0].name
+        currency['code'] = [c for c in currencies if c.id == currency_id][0].code
 
-    df = {'date': [], 'mid_rate': []}
+        query = CurrencyDayMidRate.query.filter_by(
+                currency_id=currency_id,
+            ).order_by(CurrencyDayMidRate.date.asc()).all()
 
-    for currency_day_midrate in query:
-        df['date'].append(currency_day_midrate.date)
-        df['mid_rate'].append(currency_day_midrate.mid_rate)
+        df = {'date': [], 'mid_rate': []}
+
+        for currency_day_midrate in query:
+            df['date'].append(currency_day_midrate.date)
+            df['mid_rate'].append(currency_day_midrate.mid_rate)
+
+    else:
+        currency = None
+        df = {'date': [], 'mid_rate': []}
 
     fig = px.line(df, x='date', y='mid_rate',
                   labels={
