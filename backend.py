@@ -50,11 +50,10 @@ def comparison():
         second_currency_midrate = second_currency.mid_rate
 
         if first_currency_midrate and second_currency_midrate:
-            compare_result = first_currency_midrate - second_currency_midrate
+            resp["compare_result"] = first_currency_midrate - second_currency_midrate
 
         resp["first_currency"] = [c for c in currencies if c.id == first_currency_id][0].code
         resp["second_currency"] = [c for c in currencies if c.id == second_currency_id][0].code
-        resp["compare_result"] = compare_result
 
     return render_template('comparison.html', resp=resp, currencies=currencies)
 
