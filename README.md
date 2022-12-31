@@ -1,6 +1,4 @@
-``` bash
-$ pip3 install -r requirements.txt
-```## Table of contents
+## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#downloading-the-source-code-and-setup)
