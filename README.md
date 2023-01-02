@@ -1,3 +1,4 @@
+
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
@@ -25,19 +26,29 @@ The recommended way to get the source code of this project is by cloning this re
 $ git clone https://github.com/filrat2/currencies
 ```
 
-To run this project, install all required modules in your virtual environment with the following command:
+To run this project, install all required Python modules in your virtual environment with the following command:
 ``` bash
-$ pip3 install -r requirements.txt
+(venv) $ pip3 install -r requirements.txt
 ```
 
 Before starting the server for the first time, you must download the data from [National Bank of Poland](https://www.nbp.pl/)  (Narodowy Bank Polski) with the following command:
 ``` bash
-$ python3 download_data.py start-date end-date
+(venv) $ python3 download_data.py start-date end-date
 ```
 Dates (start-date and end-date) must be provided in the **YYYY-MM-DD** format  (ISO 8601 standard), for example:
 
 ``` bash
-$ python3 download_data.py 2022-09-29 2022-12-31 #a period of 93 days
+(venv) $ python3 download_data.py 2022-09-29 2022-12-31 #a period of 93 days
 ```
 
-Historic data for currency exchange rates are available since **2 January 2002** and a **single enquiry cannot cover a period longer than 93 days**. This data comes from [Middle exchange rates of foreign currencies – table A](https://www.nbp.pl/homen.aspx?f=/kursy/ratesa.html).
+Historic data for currency exchange rates are available since **2 January 2002** and a **single enquiry cannot cover a period longer than 93 days**. This data comes from [Middle exchange rates of foreign currencies – table A](https://www.nbp.pl/homen.aspx?f=/kursy/ratesa.html). 
+
+To start server on your local machine use following command: 
+``` bash
+(venv) $ python3 -m flask --app backend run
+```
+
+To start server **with active debugger** on your local machine use following command: 
+``` bash
+(venv) $ python3 -m flask --app backend --debug run
+```

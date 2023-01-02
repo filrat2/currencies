@@ -54,6 +54,10 @@
          <h3>Kurs waluty {{ resp["first_currency"] }} jest o {{ resp['compare_result']|abs|round(2, "common") }} zł niższy niż kurs waluty {{ resp["second_currency"] }}.</h3>
     {% endif %}
     
+    {% if resp['date'] %}
+        <h5>Dane pochodzą z dnia {{ resp['date'] }}.</h5>
+    {% endif %}
+    
     <p>
         <a href="https://www.nbp.pl/" class="link-secondary">Narodowy Bank Polski</a><br>
         <a href="https://www.nbp.pl/kursy/kursya.html" class="link-secondary">Kursy średnie walut obcych – tabela A</a><br>

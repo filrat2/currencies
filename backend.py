@@ -46,6 +46,18 @@ def comparison():
         else:
             second_currency = CurrencyDayMidRate(mid_rate=1.00)
 
+        if not first_currency:
+            first_currency = CurrencyDayMidRate.query.filter_by(
+                    currency_id=first_currency_id
+                    ).order_by(CurrencyDayMidRate.date.desc()).first()
+            resp['date'] = first_currency.date
+
+        if not second_currency:
+            second_currency = CurrencyDayMidRate.query.filter_by(
+                    currency_id=second_currency_id
+                    ).order_by(CurrencyDayMidRate.date.desc()).first()
+            resp['date'] = second_currency.date
+
         first_currency_midrate = first_currency.mid_rate
         second_currency_midrate = second_currency.mid_rate
 
@@ -61,6 +73,7 @@ def comparison():
 @app.route("/trade", methods=['GET', 'POST'])
 def trade():
     resp = None
+    currencies_date = None
 
     currencies = Currency.query.all()
     currencies.append(pln)
@@ -87,6 +100,18 @@ def trade():
         else:
             buy_c = CurrencyDayMidRate(mid_rate=1.00)
 
+        if not sell_c:
+            sell_c = CurrencyDayMidRate.query.filter_by(
+                    currency_id=id_sell
+                    ).order_by(CurrencyDayMidRate.date.desc()).first()
+            currencies_date = sell_c.date
+
+        if not buy_c:
+            buy_c = CurrencyDayMidRate.query.filter_by(
+                    currency_id=id_buy
+                    ).order_by(CurrencyDayMidRate.date.desc()).first()
+            currencies_date = buy_c.date
+
         if sell_c and buy_c and count:
             sell_value = sell_c.mid_rate
             buy_value = buy_c.mid_rate
@@ -97,7 +122,8 @@ def trade():
             resp["sell"] = [c for c in currencies if c.id == id_sell][0].code
             resp["buy"] = [c for c in currencies if c.id == id_buy][0].code
 
-    return render_template('trade.html', resp=resp, currencies=currencies)
+    return render_template('trade.html', resp=resp, currencies=currencies,
+                           date=currencies_date)
 
 
 @app.route("/table",  methods=['GET', 'POST'])
@@ -107,8 +133,20 @@ def table():
                  Currency.id == CurrencyDayMidRate.currency_id).filter_by(
                      date=date.today()
                  ).all()
+    record_date = date.today()
 
-    return render_template('table.html', currencies=query)
+    if not query:
+        last_record = CurrencyDayMidRate.query.filter_by(
+                currency_id=8
+                ).order_by(CurrencyDayMidRate.date.desc()).first()
+        record_date = last_record.date
+
+        query = db_nbp.session.query(Currency, CurrencyDayMidRate).\
+            join(CurrencyDayMidRate,
+                 Currency.id == CurrencyDayMidRate.currency_id).filter_by(
+                         date=record_date).all()
+
+    return render_template('table.html', currencies=query, date=record_date)
 
 
 @app.route("/plot", methods=['GET', 'POST'])

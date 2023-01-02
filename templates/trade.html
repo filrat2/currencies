@@ -38,7 +38,7 @@
         </select>
         
         <label for="count">Kwota: </label>
-        <input type="number" id="count" name="count" step="0.01" value="0" min="0">
+        <input type="number" id="count" name="count" step="0.01" value="0" min="0.01">
         
         <br><br>
         
@@ -56,13 +56,15 @@
         <input type="submit" value="Zatwierdź"><br><br>
     </form>
     
-    {% if not resp%}
+    {% if not resp %}
     {% elif resp["sell"] == resp["buy"] %}
-    <h3>Prawdopodobnie wybrałeś dwie takie same waluty.</h3>
+        <h3>Prawdopodobnie wybrałeś dwie takie same waluty.</h3>
     {% elif (resp|length) == 4 %}
-    <h3>Jeśli sprzedasz {{ resp["count"] }} {{ resp["sell"] }}, otrzymasz {{ resp["amount"]|round(2) }} {{ resp["buy"] }}.</h3>
-    {% elif (resp|length) <= 4 %}
-    <h3>Podaj ilość sprzedawanej waluty.</h3>
+        <h3>Jeśli sprzedasz {{ resp["count"] }} {{ resp["sell"] }}, otrzymasz {{ resp["amount"]|round(2) }} {{ resp["buy"] }}.</h3>
+    {% endif %}
+    
+    {% if date %}
+        <h5>Dane pochodzą z dnia {{ date }}.</h5>
     {% endif %}
     
     <p>

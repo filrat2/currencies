@@ -15,6 +15,9 @@
          th, td {
          padding: 10px;
          }
+         h4 {
+         text-align: center;
+         }
      </style>
 </head>
 
@@ -27,6 +30,10 @@
         <a href="{{ url_for('comparison') }}" class="link-secondary">Porównanie walut</a><br>
         <a href="{{ url_for('plot') }}" class="link-secondary">Wykresy</a><br>
     </p>
+    
+    {% if date%}
+        <h4>Tabela A z dnia {{ date }}</h4>
+    {% endif %}
     
     <table style="width:100%", border="1">
         <tr>
