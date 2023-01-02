@@ -1,11 +1,20 @@
+# Currency Converter
 
 ## Table of contents
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#downloading-the-source-code-and-setup)
+* [Planned changes](#planned-changes)
+* [About me](#about-me)
 
 ## General info
-This project is ...
+This project is the final project of Python Developer bootcamp at Future Collars.
+
+The project allows you to download exchange rate data from the [NBP Web API](http://api.nbp.pl/en.html) and perform several operations on the downloaded data:
+- currency conversion
+- comparing exchange rates
+- generation of time series charts
+- preview [Middle exchange rates of foreign currencies - table A](https://www.nbp.pl/homen.aspx?f=/kursy/ratesa.html) from  [National Bank of Poland](https://www.nbp.pl/)  (Narodowy Bank Polski)
 	
 ## Technologies
 <h3 align="left">Languages and Tools:</h3>
@@ -48,7 +57,22 @@ To start server on your local machine use following command:
 (venv) $ python3 -m flask --app backend run
 ```
 
-To start server **with active debugger** on your local machine use following command: 
+To start server with active debugger on your local machine use following command: 
 ``` bash
 (venv) $ python3 -m flask --app backend --debug run
 ```
+## Planned changes
+* loop for downloading data from a period longer than 93 days
+* more than one currency on [plotly](https://plotly.com/) chart
+* use the [cron](https://crontab.guru/) command-line tool (job scheduler) for daily automatic data download 
+* start hosting this project on free online service that gives a way to run Python programs inside a browser, like [PythonAnywhere](https://www.pythonanywhere.com/)
+* improve the appearance of the website
+
+## About me
+
+Hi, my name is Filip Ratajszczak and I am a geoinformation student at the Adam Mickiewicz University, Poznan, Poland.
+<h4 align="left">Connect with me:</h4>  
+<p align="left">  
+<a href="https://linkedin.com/in/filip-ratajszczak" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="filip-ratajszczak" height="30" width="40" /></a> <a href="https://discord.gg/f_ratajszczak#9731" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/discord.svg" alt="f_ratajszczak#9731" height="30" width="40" /></a> <a href="https://instagram.com/ratajszcza.k" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/instagram.svg" alt="ratajszcza.k" height="30" width="40" /></a>  
+
+</p>
