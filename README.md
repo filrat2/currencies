@@ -8,7 +8,7 @@
 * [About me](#about-me)
 
 ## General info
-This project is the final project of Python Developer bootcamp at Future Collars.
+This project is the final project of Python Developer bootcamp at [Future Collars](https://futurecollars.com/).
 
 The project allows you to download exchange rate data from the [NBP Web API](http://api.nbp.pl/en.html) and perform several operations on the downloaded data:
 - currency conversion
