@@ -4,7 +4,7 @@
 import argparse
 from sqlalchemy import exc
 from requests import get
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 from database import app, db_nbp, Currency, CurrencyDayMidRate
 
@@ -43,40 +43,58 @@ parser.add_argument('end_date', help=('Podaj koniec zakresu dat do '
 args = parser.parse_args()
 
 time_delta = args.end_date - args.start_date
-
-if time_delta.days > 93:
-    raise ValueError("Zakres czasowy nie może obejmować przedziału dłuższego, "
-                     "niż 93 dni. Podaj inny, krótszy zakres czasowy.")
-
+print(time_delta)
 
 start_date = datetime.strftime(args.start_date, '%Y-%m-%d')
 end_date = datetime.strftime(args.end_date, '%Y-%m-%d')
+last_start_date = start_date
 
-r = get(URL.format(start_date=start_date, end_date=end_date))
-response = r.json()
+try:
+    while last_start_date < end_date:
 
-with app.app_context():
-    for day in response:
-        history_date = day['effectiveDate']
-        currencies_day_midrates = []
+        print(last_start_date)
 
-        for rate in day['rates']:
-            currency = Currency.query.filter_by(code=rate['code']).first()
+        last_end_date = datetime.strptime(last_start_date,
+                                          "%Y-%m-%d") + timedelta(days=93)
 
-            if not currency:
-                currency = Currency(name=rate['currency'], code=rate['code'])
-                db_nbp.session.add(currency)
-                db_nbp.session.commit()
+        if last_end_date > datetime.now():
+            last_end_date = date.today()
+        else:
+            last_end_date = last_end_date.strftime("%Y-%m-%d")
 
-            currency_day_midrate = CurrencyDayMidRate(
-                currency_id=currency.id,
-                mid_rate=rate['mid'],
-                date=datetime.strptime(history_date, '%Y-%m-%d')
-            )
-            currencies_day_midrates.append(currency_day_midrate)
-        try:
-            db_nbp.session.add_all(currencies_day_midrates)
-            db_nbp.session.commit()
+        r = get(URL.format(start_date=last_start_date, end_date=last_end_date))
+        response = r.json()
 
-        except exc.IntegrityError:
-            db_nbp.session.rollback()
+        with app.app_context():
+            for day in response:
+                history_date = day['effectiveDate']
+                currencies_day_midrates = []
+
+                for rate in day['rates']:
+                    currency = Currency.query.filter_by(code=rate['code']
+                                                        ).first()
+
+                    if not currency:
+                        currency = Currency(name=rate['currency'],
+                                            code=rate['code'])
+                        db_nbp.session.add(currency)
+                        db_nbp.session.commit()
+
+                    currency_day_midrate = CurrencyDayMidRate(
+                        currency_id=currency.id,
+                        mid_rate=rate['mid'],
+                        date=datetime.strptime(history_date, '%Y-%m-%d')
+                    )
+                    currencies_day_midrates.append(currency_day_midrate)
+                try:
+                    db_nbp.session.add_all(currencies_day_midrates)
+                    db_nbp.session.commit()
+
+                except exc.IntegrityError:
+                    db_nbp.session.rollback()
+
+        last_start_date = last_end_date
+except TypeError:
+    print("Pobieranie danych zakończone")
+else:
+    print("Pobieranie danych zakończone sukcesem")
